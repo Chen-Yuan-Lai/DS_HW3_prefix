@@ -50,20 +50,15 @@ int isp(char a)
 {
     if (a == '!')
         return 1;
-    else if (a == '*' || a == '/' || a = '%')
+    else if (a == '*' || a == '/' || a == '%')
         return 2;
     else if (a == '+' || a == '-')
         return 3;
-    else if (a == '<' || a == '<=' || a == '>=' || a == '>')
+    else if (a == '<' || a == '>')
         return 4;
-    else if (a == '==' || a == !=)
-        return 5;
-    else if (a == '&&')
-        return 6;
-    else if (a == '||')
-        return 7;
     else if (a == '#' || a == '(')
         return 8;
+    return -1;
 }
 
 int icp(char a)
@@ -72,24 +67,19 @@ int icp(char a)
         return 0;
     else if (a == '!')
         return 1;
-    else if (a == '*' || a == '/' || a = '%')
+    else if (a == '*' || a == '/' || a == '%')
         return 2;
     else if (a == '+' || a == '-')
         return 3;
-    else if (a == '<' || a == '<=' || a == '>=' || a == '>')
+    else if (a == '<' || a == '>')
         return 4;
-    else if (a == '==' || a == !=)
-        return 5;
-    else if (a == '&&')
-        return 6;
-    else if (a == '||')
-        return 7;
+    return -1;
 }
 
 void Posfix(Expression e)
 {
     // reverse the expression
-    e = e.reverse();
+    e.reverse();
 
     stack<char> s;
     for (char x = e.NextToken(); x != '#'; x = e.NextToken())
@@ -101,13 +91,7 @@ void Posfix(Expression e)
             x != '+' ||
             x != '-' ||
             x != '<' ||
-            x != '<=' ||
-            x != '>=' ||
-            x != '>' ||
-            x != '==' ||
-            x != '!=' ||
-            x != '&&' ||
-            x != '||')
+            x != '>')
         {
             cout << x;
         }
@@ -125,7 +109,7 @@ void Posfix(Expression e)
             {
                 cout << s.top();
             }
-            s.push(x)
+            s.push(x);
         }
     }
     // end of expression; empty the stack
@@ -136,17 +120,17 @@ void Posfix(Expression e)
 
 int main()
 {
-    Expression e("A*B+C/D");
-    e.reverse();
+    Expression e("A+B*C");
+    Posfix(e);
 
-    while (1)
-    {
-        char token = e.NextToken();
-        if (token == '#')
-        {
-            break;
-        }
-        cout << token << " ";
-    }
-    cout << endl;
+    // while (1)
+    // {
+    //     char token = e.NextToken();
+    //     if (token == '#')
+    //     {
+    //         break;
+    //     }
+    //     cout << token << " ";
+    // }
+    // cout << endl;
 }
