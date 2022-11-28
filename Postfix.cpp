@@ -14,6 +14,8 @@ public:
         // a[7] is '\0', we should exclude this char
         for (int i = size - 2; i >= 0; i--)
         {
+            if (a[i] == ' ')
+                continue;
             mystack.push(a[i]);
         }
     }
@@ -23,6 +25,7 @@ public:
         mystack.pop();
         return top;
     }
+    int size() const { return mystack.size(); }
     void reverse()
     {
         stack<char> re;
@@ -63,7 +66,7 @@ int isp(char a)
 
 int icp(char a)
 {
-    if (a == ')')
+    if (a == '(')
         return 0;
     else if (a == '!')
         return 1;
@@ -76,61 +79,57 @@ int icp(char a)
     return -1;
 }
 
-void Posfix(Expression e)
+void Prefix(Expression e)
 {
     // reverse the expression
     e.reverse();
 
     stack<char> s;
+    stack<char> output;
+    s.push('#');
+    output.push('#');
     for (char x = e.NextToken(); x != '#'; x = e.NextToken())
     {
-        if (x != '!' ||
-            x != '*' ||
-            x != '/' ||
-            x != '%' ||
-            x != '+' ||
-            x != '-' ||
-            x != '<' ||
-            x != '>')
+        if ((x >= 'a' && x <= 'z') || (x >= 'A' && x >= 'Z') || (x >= '0' && x <= '9'))
         {
-            cout << x;
+            output.push(x);
         }
         else if (x == ')')
         { // unstack untill '('
             for (; s.top() != '('; s.pop())
             {
-                cout << s.top();
+                output.push(s.top());
             }
             s.pop(); // unstack '('
         }
         else
         { // x is an operator
-            for (; isp(s.top()) <= icp(x); s.pop())
+            for (; isp(s.top()) < icp(x); s.pop())
             {
-                cout << s.top();
+                output.push(s.top());
             }
             s.push(x);
         }
     }
     // end of expression; empty the stack
-    for (; !s.empty(); s.pop())
-        cout << s.top();
+    for (; s.top() != '#'; s.pop())
+    {
+        output.push(s.top());
+    }
+    // print the expression
+    for (; output.top() != '#'; output.pop())
+    {
+        cout << output.top() << " ";
+    }
     cout << endl;
 }
 
 int main()
 {
-    Expression e("A+B*C");
-    Posfix(e);
-
-    // while (1)
-    // {
-    //     char token = e.NextToken();
-    //     if (token == '#')
-    //     {
-    //         break;
-    //     }
-    //     cout << token << " ";
-    // }
-    // cout << endl;
+    Expression e1("A*B/C");
+    Prefix(e1);
+    Expression e2("A / B - C + D * E - A * C");
+    Prefix(e2);
+    Expression e3("A * (B + C) / D - G");
+    Prefix(e3);
 }
